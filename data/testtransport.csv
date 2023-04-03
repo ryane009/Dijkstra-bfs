@@ -1,0 +1,10 @@
+origin,destination,type,price,duration
+New York,Los Angeles,plane,500,360
+Boston,Mystic,train,32,100
+Mystic,Boston,train,32,100
+New York,Boston,train,80,200
+Boston,New York,train,80,200
+New York,Providence,bus,40,150
+New York,Boston,plane,150,30
+Providence,Boston,bus,20,60
+Boston,Providence,bus,20,60

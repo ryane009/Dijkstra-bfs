@@ -1,11 +1,15 @@
 package test;
 
+import org.junit.Assert;
 import org.junit.Test;
 import sol.BFS;
+import sol.Transport;
+import sol.TravelController;
 import test.simple.SimpleEdge;
 import test.simple.SimpleGraph;
 import test.simple.SimpleVertex;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -31,6 +35,9 @@ public class BFSTest {
     private SimpleVertex e;
     private SimpleVertex f;
     private SimpleGraph graph;
+
+    private String citiesFilepath = "data/testcities.csv";
+    private String transportFilepath = "data/testtransport.csv";
 
     /**
      * Creates a simple graph.
@@ -75,6 +82,32 @@ public class BFSTest {
         List<SimpleEdge> path = bfs.getPath(this.graph, this.a, this.e);
         assertEquals(SimpleGraph.getTotalEdgeWeight(path), 200.0, DELTA);
         assertEquals(path.size(), 2);
+    }
+
+    /**
+     * Testing BFS for finding the correct most direct route,
+     * as well as the edge cases:
+     * if we make the destination the same as the origin
+     * if we make the destination an unreachable location
+     */
+    @Test
+    public void testBFS(){
+        TravelController controller = new TravelController();
+        controller.load(this.citiesFilepath, this.transportFilepath);
+
+        List<Transport> transportList = controller.mostDirectRoute("Boston", "New York");
+        double cost = 0;
+        for(Transport transport : transportList){
+            cost += transport.getPrice();
+        }
+        Assert.assertEquals(80, cost, DELTA);
+
+        List<Transport> transportListTwo = controller.mostDirectRoute("Boston", "Boston");
+        Assert.assertEquals(new LinkedList<Transport>(), transportListTwo);
+
+        List<Transport> transportListThree = controller.mostDirectRoute("Los Angeles", "Boston");
+        Assert.assertEquals(new LinkedList<Transport>(), transportListThree);
+
     }
 
     // TODO: write more tests + make sure you test all the cases in your testing plan!

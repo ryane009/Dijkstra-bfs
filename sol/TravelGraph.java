@@ -2,6 +2,9 @@ package sol;
 
 import src.IGraph;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -9,38 +12,47 @@ import java.util.Set;
  */
 public class TravelGraph implements IGraph<City, Transport> {
 
+    private HashMap<String, City> citySet;
+
+    public TravelGraph(){
+        this.citySet = new HashMap<>();
+    }
     @Override
     public void addVertex(City vertex) {
-        // TODO: implement this method!
+        this.citySet.put(vertex.toString(), vertex);
     }
 
     @Override
     public void addEdge(City origin, Transport edge) {
-        // TODO: implement this method!
+        origin.addOut(edge);
     }
 
     @Override
     public Set<City> getVertices() {
-        // TODO: implement this method!
-        return null;
+        HashSet<City> vertices = new HashSet<>();
+        for(Map.Entry<String, City> element : this.citySet.entrySet()){
+            vertices.add(element.getValue());
+        }
+        return vertices;
     }
 
     @Override
     public City getEdgeSource(Transport edge) {
-        // TODO: implement this method!
-        return null;
+        return edge.getSource();
     }
 
     @Override
     public City getEdgeTarget(Transport edge) {
-        // TODO: implement this method!
-        return null;
+        return edge.getTarget();
     }
 
     @Override
     public Set<Transport> getOutgoingEdges(City fromVertex) {
-        // TODO: implement this method!
-        return null;
+        return fromVertex.getOutgoing();
+    }
+
+    public City getCityByName(String name){
+        return this.citySet.get(name);
     }
 
     // TODO: feel free to add your own methods here!

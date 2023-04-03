@@ -10,6 +10,11 @@ import src.TransportType;
  */
 public class Transport implements IEdge<City>, ITransport {
 
+    private City source;
+    private City destination;
+    private TransportType type;
+    private double price;
+    private double minutes;
     /**
      * Constructor for Transport
      * @param source  Source city (for this edge)
@@ -20,37 +25,45 @@ public class Transport implements IEdge<City>, ITransport {
      */
     public Transport(City source, City destination, TransportType type, double price,
                      double minutes) {
-        // TODO: implement this method
+        this.source = source;
+        this.destination = destination;
+        this.type = type;
+        this.price = price;
+        this.minutes = minutes;
     }
 
     // TODO: implement this method
     @Override
-    public City getSource() {
-        return null;
-    }
+    public City getSource() {return this.source;}
 
     // TODO: implement this method
     @Override
-    public City getTarget() {
-        return null;
-    }
+    public City getTarget() {return this.destination;}
 
     // TODO: implement this method
     @Override
     public double getPrice() {
-        return 0;
+        return this.price;
     }
 
     // TODO: implement this method
     @Override
     public double getMinutes() {
-        return 0;
+        return this.minutes;
     }
 
     // TODO: implement this method
     @Override
     public String getType() {
-        return null;
+        if(this.type == TransportType.BUS){
+            return "Bus";
+        }
+        else if(this.type == TransportType.PLANE){
+            return "Plane";
+        }
+        else{
+            return "Train";
+        }
     }
 
     @Override

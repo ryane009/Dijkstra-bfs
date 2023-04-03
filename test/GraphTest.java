@@ -5,6 +5,8 @@ import test.simple.SimpleEdge;
 import test.simple.SimpleGraph;
 import test.simple.SimpleVertex;
 
+import java.util.LinkedList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -73,6 +75,11 @@ public class GraphTest {
         assertTrue(this.graph.getVertices().contains(this.a));
         assertTrue(this.graph.getVertices().contains(this.b));
         assertTrue(this.graph.getVertices().contains(this.c));
+    }
+
+    @Test
+    public void testCityGraph(){
+
     }
 
     // TODO: write more tests + make sure you test all the cases in your testing plan!

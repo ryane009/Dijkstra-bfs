@@ -1,0 +1,3 @@
+origin,destination,type,price,duration
+Boston,New York,plane,100,30
+New York,Boston,plane,100,30

@@ -1,12 +1,16 @@
 package test;
 
+import org.junit.Assert;
 import org.junit.Test;
 import sol.Dijkstra;
+import sol.Transport;
+import sol.TravelController;
 import src.IDijkstra;
 import test.simple.SimpleEdge;
 import test.simple.SimpleGraph;
 import test.simple.SimpleVertex;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,6 +37,9 @@ public class DijkstraTest {
     private SimpleVertex c;
     private SimpleVertex d;
     private SimpleVertex e;
+
+    private String citiesFilepath = "data/testcities.csv";
+    private String transportFilepath = "data/testtransport.csv";
 
     /**
      * Creates a simple graph.
@@ -86,6 +93,55 @@ public class DijkstraTest {
         path = dijkstra.getShortestPath(this.graph, this.c, this.b, edgeWeightCalculation);
         assertEquals(3, SimpleGraph.getTotalEdgeWeight(path), DELTA);
         assertEquals(2, path.size());
+    }
+
+    @Test
+    public void testCheapest(){
+        TravelController controller = new TravelController();
+        controller.load(this.citiesFilepath, this.transportFilepath);
+
+        List<Transport> transportList = controller.cheapestRoute("New York", "Boston");
+        double cost = 0;
+        for(Transport transport : transportList){
+            cost += transport.getPrice();
+        }
+        Assert.assertEquals(60, cost, DELTA);
+
+        List<Transport> transportListTwo = controller.cheapestRoute("Boston", "Boston");
+        Assert.assertEquals(new LinkedList<Transport>(), transportListTwo);
+
+        List<Transport> transportListThree = controller.cheapestRoute("Los Angeles", "Boston");
+        Assert.assertEquals(new LinkedList<Transport>(), transportListThree);
+    }
+
+
+    @Test
+    public void testFastest(){
+        TravelController controller = new TravelController();
+        controller.load(this.citiesFilepath, this.transportFilepath);
+
+        List<Transport> transportList = controller.fastestRoute("New York", "Providence");
+        double cost = 0;
+        for(Transport transport : transportList){
+            cost += transport.getMinutes();
+        }
+        Assert.assertEquals(90, cost, DELTA);
+
+        List<Transport> transportListTwo = controller.fastestRoute("Boston", "Boston");
+        Assert.assertEquals(new LinkedList<Transport>(), transportListTwo);
+
+        List<Transport> transportListThree = controller.fastestRoute("Los Angeles", "Boston");
+        Assert.assertEquals(new LinkedList<Transport>(), transportListThree);
+
+        //adding this for comparison to method above (so we know Dijkstra produces different results based
+        //on different weight
+        //also tests for double edges
+        List<Transport> transportListFour = controller.fastestRoute("New York", "Boston");
+        double costTwo = 0;
+        for(Transport transport : transportListFour){
+            costTwo += transport.getMinutes();
+        }
+        Assert.assertEquals(30, costTwo, DELTA);
     }
 
     // TODO: write more tests + make sure you test all the cases in your testing plan!

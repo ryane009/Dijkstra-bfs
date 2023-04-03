@@ -1,12 +1,11 @@
 package sol;
 
 import src.ITravelController;
+import src.TransportType;
 import src.TravelCSVParser;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -51,6 +50,23 @@ public class TravelController implements ITravelController<City, Transport> {
             return "Error parsing file: " + citiesFile;
         }
 
+        Function<Map<String, String>, Void> addEdge = map -> {
+            this.graph.addEdge(this.graph.getCityByName(map.get("origin")),
+                    new Transport(this.graph.getCityByName(map.get("origin")),
+                            this.graph.getCityByName(map.get("destination")),
+                            TransportType.fromString(map.get("type")),
+                            Double.parseDouble(map.get("price")),
+                            Double.parseDouble(map.get("duration"))));
+            return null; // need explicit return null to account for Void type
+        };
+
+        try {
+            // pass in string for CSV and function to create City (vertex) using city name
+            parser.parseTransportation(transportFile, addEdge);
+        } catch (IOException e) {
+            return "Error parsing file: " + transportFile;
+        }
+
         // TODO: call parseTransportation with the second Function variable as an argument and
         //  the right file
 
@@ -63,19 +79,27 @@ public class TravelController implements ITravelController<City, Transport> {
     @Override
     public List<Transport> fastestRoute(String source, String destination) {
         // TODO: implement this method!
-        return new ArrayList<>();
+        Dijkstra<City, Transport> finder = new Dijkstra<>();
+        Function<Transport, Double> distance = x -> x.getMinutes();
+        return finder.getShortestPath(this.graph, this.graph.getCityByName(source),
+                this.graph.getCityByName(destination), distance);
     }
 
     @Override
     public List<Transport> cheapestRoute(String source, String destination) {
         // TODO: implement this method!
-        return new ArrayList<>();
+        Dijkstra<City, Transport> finder = new Dijkstra<>();
+        Function<Transport, Double> price = x -> x.getPrice();
+        return finder.getShortestPath(this.graph, this.graph.getCityByName(source),
+                this.graph.getCityByName(destination), price);
     }
 
     @Override
     public List<Transport> mostDirectRoute(String source, String destination) {
         // TODO: implement this method!
-        return new ArrayList<>();
+        BFS<City, Transport> finder = new BFS<>();
+        return finder.getPath(this.graph, this.graph.getCityByName(source),
+                this.graph.getCityByName(destination));
     }
 
     /**
